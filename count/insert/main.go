@@ -10,7 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const hobby string = "999"
+const hobby string = "9999"
 
 func main() {
 	hang := make(chan struct{})
@@ -28,7 +28,7 @@ func main() {
 	slaveTwo.CreateTable()
 
 	start := time.Now()
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 10000; i++ {
 		master.InsertData(hobby, strconv.Itoa(i))
 		log.Println("[current count]", i)
 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())

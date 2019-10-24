@@ -25,7 +25,7 @@ func main() {
 
 	start := time.Now()
 	for i := 0; i < 100; i++ {
-		master.InsertData(init.hobby, strconv.Itoa(i))
+		master.InsertData(init.Hobby, strconv.Itoa(i))
 		log.Println("[current count]", i)
 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
 	}

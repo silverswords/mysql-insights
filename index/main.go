@@ -5,12 +5,12 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/silverswords/mysql-insights/init"
+	init "github.com/silverswords/mysql-insights/init"
 )
 
 func main() {
 	hang := make(chan struct{})
-	db := init.CreateCon("3306")
+	db := init.CreateCon("33")
 
 	start := time.Now()
 	go func() {
@@ -20,9 +20,4 @@ func main() {
 	<-hang
 }
 
-func (db *DB) CreateIndex() {
-	_, err := db.Exec("ALTER TABLE masterSlaveDB.masterSlaveTable ADD PRIMARY KEY (id);")
-	if err != nil {
-		log.Println(err)
-	}
-}
+

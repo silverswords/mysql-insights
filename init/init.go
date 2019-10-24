@@ -5,10 +5,10 @@ import (
 	"errors"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_"github.com/go-sql-driver/mysql"
 )
 
-const hobby string = "99"
+const Hobby string = "99"
 
 type DB struct {
 	*sql.DB
@@ -70,4 +70,11 @@ func (db *DB) QueryDataByHobbies(hobbies string) int {
 	}
 
 	return 1
+}
+
+func (db *DB) CreateIndex() {
+	_, err := db.Exec("ALTER TABLE masterSlaveDB.masterSlaveTable ADD PRIMARY KEY (id);")
+	if err != nil {
+		log.Println(err)
+	}
 }

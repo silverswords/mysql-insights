@@ -5,7 +5,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	init "github.com/silverswords/mysql-insights/init"
+	"github.com/silverswords/mysql-insights/init"
 )
 
 func main() {
@@ -19,5 +19,3 @@ func main() {
 	}()
 	<-hang
 }
-
-

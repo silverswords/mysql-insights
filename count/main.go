@@ -5,14 +5,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/silverswords/mysql-insights/init"
+	"github.com/silverswords/mysql-insights/initial"
 )
 
 func main() {
 	hang := make(chan struct{})
-	master := init.CreateCon("3306")
-	slaveOne := init.CreateCon("3307")
-	slaveTwo := init.CreateCon("3308")
+	master := initial.CreateCon("3306")
+	slaveOne := initial.CreateCon("3307")
+	slaveTwo := initial.CreateCon("3308")
 
 	master.CreateDB()
 	master.CreateTable()
@@ -25,7 +25,7 @@ func main() {
 
 	start := time.Now()
 	for i := 0; i < 100; i++ {
-		master.InsertData(init.Hobby, strconv.Itoa(i))
+		master.InsertData(initial.Hobby, strconv.Itoa(i))
 		log.Println("[current count]", i)
 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
 	}

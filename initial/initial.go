@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 
-	_"github.com/go-sql-driver/mysql"
 )
 
 const Hobby string = "99"

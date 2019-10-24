@@ -4,65 +4,63 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-	"strconv"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 const hobby string = "99"
 
-func main() {
-	hang := make(chan struct{})
-	master := CreateCon("3306")
-	slaveOne := CreateCon("3307")
-	slaveTwo := CreateCon("3308")
+// func main() {
+// 	hang := make(chan struct{})
+// 	master := CreateCon("3306")
+// 	slaveOne := CreateCon("3307")
+// 	slaveTwo := CreateCon("3308")
 
-	master.CreateDB()
-	master.CreateTable()
+// 	master.CreateDB()
+// 	master.CreateTable()
 
-	slaveOne.CreateDB()
-	slaveOne.CreateTable()
+// 	slaveOne.CreateDB()
+// 	slaveOne.CreateTable()
 
-	slaveTwo.CreateDB()
-	slaveTwo.CreateTable()
+// 	slaveTwo.CreateDB()
+// 	slaveTwo.CreateTable()
 
-	start := time.Now()
-	for i := 0; i < 100; i++ {
-		master.InsertData(hobby, strconv.Itoa(i))
-		log.Println("[current count]", i)
-		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
-	}
+// 	start := time.Now()
+// 	for i := 0; i < 100; i++ {
+// 		master.InsertData(hobby, strconv.Itoa(i))
+// 		log.Println("[current count]", i)
+// 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
+// 	}
 
-	// start = time.Now()
-	// go func() {
-	// 	var code int
-	// 	for code != 1 {
-	// 		code = master.QueryDataByHobbies(hobby)
-	// 	}
-	// 	log.Println("[master query]", time.Now().Sub(start).Seconds())
-	// }()
+// 	// start = time.Now()
+// 	// go func() {
+// 	// 	var code int
+// 	// 	for code != 1 {
+// 	// 		code = master.QueryDataByHobbies(hobby)
+// 	// 	}
+// 	// 	log.Println("[master query]", time.Now().Sub(start).Seconds())
+// 	// }()
 
-	// start = time.Now()
-	// go func() {
-	// 	var code int
-	// 	for code != 1 {
-	// 		code = slaveOne.QueryDataByHobbies(hobby)
-	// 	}
-	// 	log.Println("[slave 3307 query]", time.Now().Sub(start).Seconds())
-	// }()
+// 	// start = time.Now()
+// 	// go func() {
+// 	// 	var code int
+// 	// 	for code != 1 {
+// 	// 		code = slaveOne.QueryDataByHobbies(hobby)
+// 	// 	}
+// 	// 	log.Println("[slave 3307 query]", time.Now().Sub(start).Seconds())
+// 	// }()
 
-	// start = time.Now()
-	// go func() {
-	// 	var code int
-	// 	for code != 1 {
-	// 		code = slaveTwo.QueryDataByHobbies(hobby)
-	// 	}
-	// 	log.Println("[slave 3308 query]", time.Now().Sub(start).Seconds())
-	// }()
+// 	// start = time.Now()
+// 	// go func() {
+// 	// 	var code int
+// 	// 	for code != 1 {
+// 	// 		code = slaveTwo.QueryDataByHobbies(hobby)
+// 	// 	}
+// 	// 	log.Println("[slave 3308 query]", time.Now().Sub(start).Seconds())
+// 	// }()
 
-	<-hang
-}
+// 	<-hang
+// }
 
 type DB struct {
 	*sql.DB

@@ -14,8 +14,8 @@ func main() {
 
 	start := time.Now()
 	go func() {
-		db.CreateIndex()
-		log.Println("[addIndex time]", time.Now().Sub(start).Seconds())
+		db.OrderTable()
+		log.Println("[Order time]", time.Now().Sub(start).Seconds())
 	}()
 	<-hang
 }

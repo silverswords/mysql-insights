@@ -2,17 +2,17 @@ package main
 
 import (
 	"log"
-	"strconv"
 	"time"
 
-	"github.com/silverswords/mysql-insights/initial"
+	_ "github.com/go-sql-driver/mysql"
+	sql "github.com/silverswords/mysql-insights/mysql"
 )
 
 func main() {
 	hang := make(chan struct{})
-	master := initial.CreateCon("3306")
-	slaveOne := initial.CreateCon("3307")
-	slaveTwo := initial.CreateCon("3308")
+	master := sql.CreateCon("3306")
+	slaveOne := sql.CreateCon("3307")
+	slaveTwo := sql.CreateCon("3308")
 
 	master.CreateDB()
 	master.CreateTable()
@@ -23,21 +23,24 @@ func main() {
 	slaveTwo.CreateDB()
 	slaveTwo.CreateTable()
 
+	// start := time.Now()
+	// for i := 0; i < 100; i++ {
+	// 	master.InsertData(sql.Hobby, strconv.Itoa(i))
+	// 	log.Println("[current count]", i)
+	// 	log.Println("[current insert time]", time.Now().Sub(start).Seconds())
+	// }
 	start := time.Now()
-	for i := 0; i < 100; i++ {
-		master.InsertData(initial.Hobby, strconv.Itoa(i))
-		log.Println("[current count]", i)
-		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
-	}
-
-	// start = time.Now()
-	// go func() {
-	// 	var code int
-	// 	for code != 1 {
-	// 		code = master.QueryDataByHobbies(hobby)
-	// 	}
-	// 	log.Println("[master query]", time.Now().Sub(start).Seconds())
-	// }()
+	go func() {
+		var code int
+		var err error
+		for code != 1 {
+			code, err = master.QueryDataByHobbies(sql.Hobby)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+		log.Println("[master query]", time.Now().Sub(start).Seconds())
+	}()
 
 	// start = time.Now()
 	// go func() {

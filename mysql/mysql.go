@@ -1,10 +1,11 @@
-package init
+package mysql
 
 import (
 	"database/sql"
 	"errors"
 	"log"
 
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const Hobby string = "99"
@@ -57,22 +58,28 @@ func (db *DB) InsertData(name, hobbies string) {
 	}
 }
 
-func (db *DB) QueryDataByHobbies(hobbies string) int {
-	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE name = ? LIMIT 1 LOCK IN SHARE MODE", hobbies)
+func (db *DB) QueryDataByHobbies(hobbies string) (int, error) {
+	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE hobbies = ? LIMIT 1 LOCK IN SHARE MODE", hobbies)
 	var (
-		id    int64
 		name  string
 		hobby string
 	)
-	if err := result.Scan(&id, &name, &hobby); err != nil {
-		return 0
+	if err := result.Scan(&name, &hobby); err != nil {
+		return 0, err
 	}
 
-	return 1
+	return 1, nil
 }
 
 func (db *DB) CreateIndex() {
-	_, err := db.Exec("ALTER TABLE masterSlaveDB.masterSlaveTable ADD PRIMARY KEY (id);")
+	_, err := db.Exec("CREATE UNIQUE INDEX id ON masterSlaveDB.masterSlaveTable (hobbies);")
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (db *DB) OrderTable() {
+	_, err := db.Exec("SELECT name, hobbies FROM masterSlaveDB.masterSlaveTable ORDER BY hobbies DESC;")
 	if err != nil {
 		log.Println(err)
 	}

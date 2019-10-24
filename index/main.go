@@ -1,13 +1,11 @@
 package main
 
 import (
-	"database/sql"
-	"errors"
 	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	master "github.com/silverswords/mysql-insights/count/main"
+	"github.com/silverswords/mysql-insights/count"
 )
 
 func main() {

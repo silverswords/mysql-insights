@@ -1,4 +1,4 @@
-package master
+package count
 
 import (
 	"database/sql"

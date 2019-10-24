@@ -5,12 +5,12 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	count "github.com/silverswords/mysql-insights/count"
+	"github.com/silverswords/mysql-insights/init"
 )
 
 func main() {
 	hang := make(chan struct{})
-	db := count.CreateCon("90")
+	db := init.CreateCon("3306")
 
 	start := time.Now()
 	go func() {

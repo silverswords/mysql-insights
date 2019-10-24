@@ -1,4 +1,4 @@
-package main
+package master
 
 import (
 	"database/sql"
@@ -10,7 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const hobby string = "999999"
+const hobby string = "99"
 
 func main() {
 	hang := make(chan struct{})
@@ -28,38 +28,38 @@ func main() {
 	slaveTwo.CreateTable()
 
 	start := time.Now()
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < 100; i++ {
 		master.InsertData(hobby, strconv.Itoa(i))
 		log.Println("[current count]", i)
 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
 	}
 
-	start = time.Now()
-	go func() {
-		var code int
-		for code != 1 {
-			code = master.QueryDataByHobbies(hobby)
-		}
-		log.Println("[master query]", time.Now().Sub(start).Seconds())
-	}()
+	// start = time.Now()
+	// go func() {
+	// 	var code int
+	// 	for code != 1 {
+	// 		code = master.QueryDataByHobbies(hobby)
+	// 	}
+	// 	log.Println("[master query]", time.Now().Sub(start).Seconds())
+	// }()
 
-	start = time.Now()
-	go func() {
-		var code int
-		for code != 1 {
-			code = slaveOne.QueryDataByHobbies(hobby)
-		}
-		log.Println("[slave 3307 query]", time.Now().Sub(start).Seconds())
-	}()
+	// start = time.Now()
+	// go func() {
+	// 	var code int
+	// 	for code != 1 {
+	// 		code = slaveOne.QueryDataByHobbies(hobby)
+	// 	}
+	// 	log.Println("[slave 3307 query]", time.Now().Sub(start).Seconds())
+	// }()
 
-	start = time.Now()
-	go func() {
-		var code int
-		for code != 1 {
-			code = slaveTwo.QueryDataByHobbies(hobby)
-		}
-		log.Println("[slave 3308 query]", time.Now().Sub(start).Seconds())
-	}()
+	// start = time.Now()
+	// go func() {
+	// 	var code int
+	// 	for code != 1 {
+	// 		code = slaveTwo.QueryDataByHobbies(hobby)
+	// 	}
+	// 	log.Println("[slave 3308 query]", time.Now().Sub(start).Seconds())
+	// }()
 
 	<-hang
 }
@@ -95,10 +95,10 @@ func (db *DB) CreateDB() error {
 func (db *DB) CreateTable() {
 	_, err := db.Exec(
 		"CREATE TABLE IF NOT EXISTS masterSlaveDB.masterSlaveTable (" +
-			"id bigint(20) unsigned NOT NULL AUTO_INCREMENT, " +
+			// "id bigint(20) unsigned NOT NULL AUTO_INCREMENT, " +
 			"name varchar(50) DEFAULT NULL, " +
-			"hobbies varchar(200) DEFAULT NULL, " +
-			"PRIMARY KEY (id)" +
+			"hobbies varchar(200) DEFAULT NULL " +
+			// "PRIMARY KEY (id)" +
 			") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; ")
 	if err != nil {
 		log.Println(err)

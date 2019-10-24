@@ -5,15 +5,16 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/silverswords/mysql-insights/count"
+	count "github.com/silverswords/mysql-insights/count"
 )
 
 func main() {
 	hang := make(chan struct{})
+	db := count.CreateCon("90")
 
 	start := time.Now()
 	go func() {
-		master.CreateIndex()
+		db.CreateIndex()
 		log.Println("[addIndex time]", time.Now().Sub(start).Seconds())
 	}()
 	<-hang

@@ -8,7 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const Hobby string = "99"
+const Hobby string = "999"
 
 type DB struct {
 	*sql.DB

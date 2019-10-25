@@ -24,7 +24,7 @@ func main() {
 	slaveTwo.CreateTable()
 
 	// start := time.Now()
-	// for i := 0; i < 100; i++ {
+	// for i := 0; i < 1000; i++ {
 	// 	master.InsertData(sql.Hobby, strconv.Itoa(i))
 	// 	log.Println("[current count]", i)
 	// 	log.Println("[current insert time]", time.Now().Sub(start).Seconds())

@@ -33,11 +33,11 @@ func main() {
 	}
 	log.Println(result, "[get result]")
 
-	// affected, err = engine.Id(1).Delete(user)
-	// if err != nil {
-	// 	log.Println(err, "[delete err]")
-	// }
-	// log.Println(affected, "[delete affected]")
+	affected, err = engine.Id(1).Delete(user)
+	if err != nil {
+		log.Println(err, "[delete err]")
+	}
+	log.Println(affected, "[delete affected]")
 }
 
 type User struct {

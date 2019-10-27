@@ -10,100 +10,80 @@ import (
 )
 
 func main() {
-	// initialize the DbMap
 	dbmap := initDb("3306")
 	defer dbmap.Db.Close()
 
-	// delete any existing rows
-	err := dbmap.TruncateTables()
-	checkErr(err, "TruncateTables failed")
+	// p1 := newPost("aaa", "bbb")
+	// start := time.Now()
+	// for i := 0; i < 10000; i++ {
+	// 	err := dbmap.Insert(&p1)
+	// 	log.Println("[current count]", i)
+	// 	log.Println("[current insert time]", time.Now().Sub(start).Seconds())
+	// 	if err != nil {
+	// 		log.Println(err)
+	// 	}
+	// }
 
-	// create two posts
-	p1 := newPost("Go 1.1 released!", "Lorem ipsum lorem ipsum")
-	p2 := newPost("Go 1.2 released!", "Lorem ipsum lorem ipsum")
-
-	// insert rows - auto increment PKs will be set properly after the insert
-	err = dbmap.Insert(&p1, &p2)
-	checkErr(err, "Insert failed")
-
-	// use convenience SelectInt
-	count, err := dbmap.SelectInt("select count(*) from posts")
-	checkErr(err, "select count(*) failed")
-	log.Println("Rows after inserting:", count)
+	// start := time.Now()
+	// err := dbmap.SelectOne(&p1, "select * from posts where post_id = ?", 10000)
+	// log.Println("[query time]", time.Now().Sub(start).Seconds())
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 
 	// update a row
-	p2.Title = "Go 1.2 is better than ever"
-	count, err = dbmap.Update(&p2)
-	checkErr(err, "Update failed")
-	log.Println("Rows updated:", count)
+	// start := time.Now()
+	// _, err := dbmap.Exec("update posts set title='ccc', body='ddd' where id=9999")
+	// log.Println("[update time]", time.Now().Sub(start).Seconds())
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 
-	// fetch one row - note use of "post_id" instead of "Id" since column is aliased
-	//
-	// Postgres users should use $1 instead of ? placeholders
-	// See 'Known Issues' below
-	//
-	err = dbmap.SelectOne(&p2, "select * from posts where post_id=?", p2.Id)
-	checkErr(err, "SelectOne failed")
-	log.Println("p2 row:", p2)
+	// err = dbmap.SelectOne(&p1, "select * from posts where post_id=?", p1.Id)
+	// checkErr(err, "SelectOne failed")
+	// log.Println("p2 row:", p1)
 
-	// fetch all rows
-	var posts []Post
-	_, err = dbmap.Select(&posts, "select * from posts order by post_id")
-	checkErr(err, "Select failed")
-	log.Println("All rows:")
-	for x, p := range posts {
-		log.Printf("    %d: %v\n", x, p)
+	start := time.Now()
+	_, err := dbmap.Exec("delete from posts where id=10000")
+	// count, err := dbmap.Delete(&p1)
+	log.Println("[delete time]", time.Now().Sub(start).Seconds())
+	if err != nil {
+		log.Println(err)
 	}
+	// log.Println("Rows deleted:", count)
 
-	// delete row by PK
-	count, err = dbmap.Delete(&p1)
-	checkErr(err, "Delete failed")
-	log.Println("Rows deleted:", count)
+	// _, err = dbmap.Exec(c, p1.Id)
+	// checkErr(err, "Exec failed")
 
-	// delete row manually via Exec
-	_, err = dbmap.Exec("delete from posts where post_id=?", p2.Id)
-	checkErr(err, "Exec failed")
+	// count, err = dbmap.SelectInt("select count(*) from posts")
+	// checkErr(err, "select count(*) failed")
+	// log.Println("Row count - should be zero:", count)
 
-	// confirm count is zero
-	count, err = dbmap.SelectInt("select count(*) from posts")
-	checkErr(err, "select count(*) failed")
-	log.Println("Row count - should be zero:", count)
-
-	log.Println("Done!")
+	// log.Println("Done!")
 }
 
 type Post struct {
-	// db tag lets you specify the column name if it differs from the struct field
-	Id      int64 `db:"post_id"`
-	Created int64
-	Title   string `db:",size:50"`               // Column size set to 50
-	Body    string `db:"article_body,size:1024"` // Set both column name and size
+	Id    int64  `db:"id"`
+	Title string `db:"title"`
+	Body  string `db:"body"`
 }
 
 func newPost(title, body string) Post {
 	return Post{
-		Created: time.Now().UnixNano(),
-		Title:   title,
-		Body:    body,
+		Title: title,
+		Body:  body,
 	}
 }
 
 func initDb(port string) *gorp.DbMap {
-	// connect to db using standard Go database/sql API
-	// use whatever database/sql driver you wish
 	db, err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:"+port+")/masterSlaveDB?parseTime=true")
 	checkErr(err, "sql.Open failed")
 
-	// construct a gorp DbMap
 	dialect := gorp.MySQLDialect{"InnoDB", "UTF8"}
 	dbmap := &gorp.DbMap{Db: db, Dialect: dialect}
 
-	// add a table, setting the table name to 'posts' and
-	// specifying that the Id property is an auto incrementing PK
 	dbmap.AddTableWithName(Post{}, "posts").SetKeys(true, "Id")
 
-	// create the table. in a production system you'd generally
-	// use a migration tool, or create the tables via scripts
 	err = dbmap.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
 

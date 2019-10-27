@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
@@ -18,26 +19,42 @@ func main() {
 		log.Println(err, "[CreateTable err]")
 	}
 
-	var user User
-	user.Name = "aaa"
-	user.Address = "North"
-	affected, err := engine.Insert(user)
-	if err != nil {
-		log.Println(err, "[insert err]")
-	}
-	log.Println(affected, "[insert affected]")
+	user := User{Name: "aaa", Address: "bbb"}
+	// start := time.Now()
+	// for i := 0; i < 10000; i++ {
+	// 	user := User{Name: "aaa", Address: "bbb"}
+	// 	affected, err := engine.Insert(user)
+	// 	if err != nil {
+	// 		log.Println(err, "[insert err]")
+	// 	}
+	// 	log.Println(affected, "[insert affected]")
+	// 	log.Println("[current count]", i)
+	// 	log.Println("[current insert time]", time.Now().Sub(start).Seconds())
+	// }
 
-	result, err := engine.Id(2).Get(&user)
-	if err != nil {
-		log.Println(err, "[get err]")
-	}
-	log.Println(result, "[get result]")
+	// start := time.Now()
+	// result, err := engine.Id(10000).Get(&user)
+	// log.Println("[query time]", time.Now().Sub(start).Seconds())
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// log.Println(result, "[query result]")
 
-	affected, err = engine.Id(1).Delete(user)
+	// start := time.Now()
+	// affected, err := engine.Id(9999).Update(&User{Name: "ccc", Address: "ddd"})
+	// log.Println("[update time]", time.Now().Sub(start).Seconds())
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// log.Println(affected)
+
+	start := time.Now()
+	affected, err := engine.Id(10000).Delete(user)
+	log.Println("[delete time]", time.Now().Sub(start).Seconds())
 	if err != nil {
-		log.Println(err, "[delete err]")
+		log.Println(err)
 	}
-	log.Println(affected, "[delete affected]")
+	log.Println("[delete affected]", affected)
 }
 
 type User struct {

@@ -2,13 +2,14 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 type User struct {
-	gorm.Model
+	Id   int64 `gorm:"AUTO_INCREMENT;PRIMARY_KEY"`
 	Name string
 	Age  int `gorm:"default:18"`
 }
@@ -26,17 +27,27 @@ func main() {
 		db.CreateTable(new(User))
 	}
 
-	user := User{Name: "lala", Age: 18}
-	db.NewRecord(user)
-	db.Create(&user)
-	db.NewRecord(user)
+	// db.NewRecord(user)
+	// db.Create(&user)
+	// start := time.Now()
+	// for i := 0; i < 10000; i++ {
+	// user := User{Name: "aaa", Age: 20}
+	// 	db.NewRecord(user)
+	// 	db.Create(&user)
+	// 	log.Println("[current count]", i)
+	// 	log.Println("[current insert time]", time.Now().Sub(start).Seconds())
+	// }
 
-	db.First(&user, 0)
+	// start := time.Now()
+	// db.Find(&user, 10000)
+	// log.Println("[query time]", time.Now().Sub(start).Seconds())
+	// log.Println(db.Find(&user, 10000).Value)
 
-	// user.Name = "hahaha"
-	// user.Age = 100
-	// db.Model(&user).Update("name", "hello")
-	db.Table("users").Where("id IN (?)", 4).Updates(map[string]interface{}{"name": "hello", "age": 19})
+	// start := time.Now()
+	// db.Table("users").Where("id IN (?)", 9999).Updates(map[string]interface{}{"name": "bbb", "age": 18})
+	// log.Println("[update time]", time.Now().Sub(start).Seconds())
 
-	db.Where("id = ?", 3).Delete(&User{})
+	start := time.Now()
+	db.Where("id = ?", 10000).Delete(&User{})
+	log.Println("[delete time]", time.Now().Sub(start).Seconds())
 }

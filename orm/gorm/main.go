@@ -20,7 +20,11 @@ func main() {
 	}
 	defer db.Close()
 
-	db.CreateTable(new(User))
+	result := db.HasTable(&User{})
+	log.Println("result:", result)
+	if result != true {
+		db.CreateTable(new(User))
+	}
 
 	user := User{Name: "lala", Age: 18}
 	db.NewRecord(user)
@@ -29,5 +33,10 @@ func main() {
 
 	db.First(&user, 0)
 
-	// db.Delete(&user, 0)
+	// user.Name = "hahaha"
+	// user.Age = 100
+	// db.Model(&user).Update("name", "hello")
+	db.Table("users").Where("id IN (?)", 4).Updates(map[string]interface{}{"name": "hello", "age": 19})
+
+	db.Where("id = ?", 3).Delete(&User{})
 }

@@ -3,29 +3,34 @@ package main
 import (
 	"database/sql"
 	"log"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/gorp.v1"
 )
 
 func main() {
-	dbmap := initDb("3306")
-	defer dbmap.Db.Close()
+	dbmap := initDb("3307")
+	// defer dbmap.Db.Close()
 
-	// p1 := newPost("aaa", "bbb")
+	p1 := newPost("aaa", "bbb")
 	// start := time.Now()
-	// for i := 0; i < 10000; i++ {
-	// 	err := dbmap.Insert(&p1)
-	// 	log.Println("[current count]", i)
-	// 	log.Println("[current insert time]", time.Now().Sub(start).Seconds())
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 	}
-	// }
+	for i := 0; i < 10; i++ {
+		go func() {
+			hang := make(chan struct{})
+			log.Println("sss")
+			err := dbmap.Insert(&p1)
+			if err != nil {
+				log.Println(err)
+			}
+			<-hang
+		}()
+		// err := dbmap.Insert(&p1)
+		log.Println("[current count]", i)
+		// log.Println("[current insert time]", time.Now().Sub(start).Seconds())
+	}
 
 	// start := time.Now()
-	// err := dbmap.SelectOne(&p1, "select * from posts where post_id = ?", 10000)
+	// err := dbmap.SelectOne(&p1, "select * from posts where id = ?", 100000)
 	// log.Println("[query time]", time.Now().Sub(start).Seconds())
 	// if err != nil {
 	// 	log.Println(err)
@@ -33,27 +38,25 @@ func main() {
 
 	// update a row
 	// start := time.Now()
-	// _, err := dbmap.Exec("update posts set title='ccc', body='ddd' where id=9999")
+	// _, err := dbmap.Exec("update posts set title='ccc', body='ddd' where id=100000")
 	// log.Println("[update time]", time.Now().Sub(start).Seconds())
 	// if err != nil {
 	// 	log.Println(err)
 	// }
 
-	// err = dbmap.SelectOne(&p1, "select * from posts where post_id=?", p1.Id)
-	// checkErr(err, "SelectOne failed")
-	// log.Println("p2 row:", p1)
+	// start := time.Now()
+	// _, err := dbmap.Exec("update posts set title='ccc', body='ddd'")
+	// log.Println("[update time]", time.Now().Sub(start).Seconds())
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 
-	start := time.Now()
-	_, err := dbmap.Exec("delete from posts where id=10000")
-	// count, err := dbmap.Delete(&p1)
-	log.Println("[delete time]", time.Now().Sub(start).Seconds())
-	if err != nil {
-		log.Println(err)
-	}
-	// log.Println("Rows deleted:", count)
-
-	// _, err = dbmap.Exec(c, p1.Id)
-	// checkErr(err, "Exec failed")
+	// start := time.Now()
+	// _, err := dbmap.Exec("delete from posts")
+	// log.Println("[delete time]", time.Now().Sub(start).Seconds())
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 
 	// count, err = dbmap.SelectInt("select count(*) from posts")
 	// checkErr(err, "select count(*) failed")

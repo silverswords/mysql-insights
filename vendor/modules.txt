@@ -1,0 +1,17 @@
+# github.com/go-sql-driver/mysql v1.4.1
+github.com/go-sql-driver/mysql
+# github.com/go-xorm/xorm v0.7.9
+github.com/go-xorm/xorm
+# github.com/jinzhu/gorm v1.9.11
+github.com/jinzhu/gorm
+github.com/jinzhu/gorm/dialects/mysql
+# github.com/jinzhu/inflection v1.0.0
+github.com/jinzhu/inflection
+# google.golang.org/appengine v1.6.0
+google.golang.org/appengine/cloudsql
+# gopkg.in/gorp.v1 v1.7.2
+gopkg.in/gorp.v1
+# xorm.io/builder v0.3.6
+xorm.io/builder
+# xorm.io/core v0.7.2
+xorm.io/core

@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"sync"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -109,9 +111,9 @@ func readAll(label string, tx *sql.Tx) {
 func writeValue(label string, tx *sql.Tx) {
 	log.Printf("--------%s--------\n", label)
 	if _, err := tx.Exec(`INSERT INTO simple(id, value) values(1, 100);`); err != nil {
-		log.Println(err)
+		log.Println(label, err)
 	}
-	log.Println()
+	log.Printf("%s Finished\n", label)
 }
 
 func readUncommittedWrite() {
@@ -148,10 +150,33 @@ func readUncommittedWrite() {
 }
 
 func writeAndRollback() {
+	wg := &sync.WaitGroup{}
 	writeValue("Read Committed", readCommittedTx)
-	writeValue("Read Uncommitted", readUncommitTx)
-	writeValue("Repeatable Read", repeatableReadTx)
-	writeValue("Serializable", serializableTx)
+
+	wg.Add(4)
+
+	go func() {
+		time.Sleep(5 * time.Second)
+		readCommittedTx.Rollback()
+		wg.Done()
+	}()
+
+	go func() {
+		writeValue("Read Uncommitted", readUncommitTx)
+		wg.Done()
+	}()
+
+	go func() {
+		writeValue("Repeatable Read", repeatableReadTx)
+		wg.Done()
+	}()
+
+	go func() {
+		writeValue("Serializable", serializableTx)
+		wg.Done()
+	}()
+
+	wg.Wait()
 }
 
 func main() {

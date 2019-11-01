@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"sync"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -9,13 +11,12 @@ import (
 
 func main() {
 	hang := make(chan struct{})
-	// const count = 100000
-	// var wg sync.WaitGroup
+	const count = 100000
+	var wg sync.WaitGroup
 	db, err := gorm.Open("mysql", "root:123456@tcp(127.0.0.1:3307)/masterSlaveDB?parseTime=true")
 	if err != nil {
 		log.Println(err)
 	}
-	// // defer db.Close()
 
 	result := db.HasTable(&User{})
 	log.Println("result:", result)
@@ -23,43 +24,43 @@ func main() {
 		db.CreateTable(new(User))
 	}
 
-	// // insert
-	// start := time.Now()
-	// wg.Add(100)
-	// for i := 0; i < 100; i++ {
-	// 	user := User{Name: "aaa", Age: 20}
-	// 	go func() {
-	// 		db.Create(&user)
-	// 		wg.Done()
-	// 	}()
-	// }
+	// insert
+	start := time.Now()
+	wg.Add(100)
+	for i := 0; i < 100; i++ {
+		user := User{Name: "aaa"}
+		go func() {
+			db.Create(&user)
+			wg.Done()
+		}()
+	}
 
-	// wg.Wait()
+	wg.Wait()
 
-	// // query
-	// user := User{Name: "aaa", Age: 20}
-	// start = time.Now()
-	// db.Find(&user, 50000)
-	// log.Println("[query time]", time.Now().Sub(start).Seconds())
-	// log.Println(db.Find(&user, count).Value)
+	// query
+	user := User{Name: "aaa"}
+	start = time.Now()
+	db.Find(&user, 50000)
+	log.Println("[query time]", time.Now().Sub(start).Seconds())
+	log.Println(db.Find(&user, count).Value)
 
-	// // update
-	// start = time.Now()
-	// db.Table("users").Where("id = ?", 100000).Updates(map[string]interface{}{"name": "bbb", "age": 18})
-	// log.Println("[update time]", time.Now().Sub(start).Seconds())
+	// update
+	start = time.Now()
+	db.Table("users").Where("id = ?", count).Updates(map[string]interface{}{"name": "bbb", "age": 18})
+	log.Println("[update time]", time.Now().Sub(start).Seconds())
 
-	// start = time.Now()
-	// db.Table("users").Updates(map[string]interface{}{"name": "bbb", "age": 18})
-	// log.Println("[update time]", time.Now().Sub(start).Seconds())
+	start = time.Now()
+	db.Table("users").Updates(map[string]interface{}{"name": "bbb", "age": 18})
+	log.Println("[update time]", time.Now().Sub(start).Seconds())
 
-	// // delete
-	// start = time.Now()
-	// db.Where("id = ?", 100000).Delete(&User{})
-	// log.Println("[delete time]", time.Now().Sub(start).Seconds())
+	// delete
+	start = time.Now()
+	db.Where("id = ?", count).Delete(&User{})
+	log.Println("[delete time]", time.Now().Sub(start).Seconds())
 
-	// start = time.Now()
-	// db.Delete(&User{})
-	// log.Println("[delete time]", time.Now().Sub(start).Seconds())
+	start = time.Now()
+	db.Delete(&User{})
+	log.Println("[delete time]", time.Now().Sub(start).Seconds())
 
 	go CreateAnimals(db)
 	<-hang
@@ -68,9 +69,9 @@ func main() {
 type User struct {
 	Id   int64 `gorm:"AUTO_INCREMENT;PRIMARY_KEY"`
 	Name string
-	// Age  int `gorm:"default:18"`
 }
 
+//transaction
 func CreateAnimals(db *gorm.DB) error {
 	tx := db.Begin()
 	defer func() {

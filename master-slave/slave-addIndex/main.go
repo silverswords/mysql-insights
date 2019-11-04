@@ -13,7 +13,6 @@ import (
 func main() {
 	hang := make(chan struct{})
 	const name string = "singing"
-	const hobby string = "99singing"
 	const count = 100000
 	master := sql.CreateCon("3306")
 	slaveOne := sql.CreateCon("3307")
@@ -39,7 +38,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = master.QueryDataByHobbies(hobby)
+			code, err = master.QueryDataByHobbies()
 			if err != nil {
 				log.Println(err)
 			}
@@ -66,7 +65,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = slaveOne.QueryDataByHobbies(hobby)
+			code, err = slaveOne.QueryDataByHobbies()
 			if err != nil {
 				log.Println(err)
 			}
@@ -78,7 +77,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = slaveTwo.QueryDataByHobbies(hobby)
+			code, err = slaveTwo.QueryDataByHobbies()
 			if err != nil {
 				log.Println(err)
 			}

@@ -8,8 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const Hobby string = "999"
-
 type DB struct {
 	*sql.DB
 }
@@ -58,9 +56,10 @@ func (db *DB) InsertData(name, hobbies string) {
 	}
 }
 
-func (db *DB) QueryDataByHobbies(hobbies string) (int, error) {
-	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE hobbies = ? LIMIT 1 LOCK IN SHARE MODE", hobbies)
+func (db *DB) QueryDataByHobbies() (int, error) {
+	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE hobbies")
 	var (
+		// id    uint64
 		name  string
 		hobby string
 	)
@@ -79,7 +78,7 @@ func (db *DB) CreateIndex() {
 }
 
 func (db *DB) OrderTable() {
-	_, err := db.Exec("SELECT name, hobbies FROM masterSlaveDB.masterSlaveTable ORDER BY hobbies DESC;")
+	_, err := db.Exec("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE hobbies = '99999hobbies' ORDER BY hobbies DESC;")
 	if err != nil {
 		log.Println(err)
 	}

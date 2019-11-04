@@ -9,13 +9,10 @@ import (
 )
 
 func main() {
-	hang := make(chan struct{})
+	const hobby string = "999999hobbies"
 	db := sql.CreateCon("3306")
 
 	start := time.Now()
-	go func() {
-		db.OrderTable()
-		log.Println("[Order time]", time.Now().Sub(start).Seconds())
-	}()
-	<-hang
+	db.OrderTable()
+	log.Println("[OrderQuery time]", time.Now().Sub(start).Seconds())
 }

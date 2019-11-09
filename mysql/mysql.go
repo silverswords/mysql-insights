@@ -41,7 +41,7 @@ func (db *DB) CreateTable() {
 		"CREATE TABLE IF NOT EXISTS masterSlaveDB.masterSlaveTable (" +
 			// "id bigint(20) unsigned NOT NULL AUTO_INCREMENT, " +
 			"name varchar(50) DEFAULT NULL, " +
-			"hobbies varchar(200) DEFAULT NULL " +
+			"age int(11) DEFAULT '0' " +
 			// "PRIMARY KEY (id)" +
 			") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; ")
 	if err != nil {
@@ -49,15 +49,15 @@ func (db *DB) CreateTable() {
 	}
 }
 
-func (db *DB) InsertData(name, hobbies string) {
-	_, err := db.Exec("INSERT INTO masterSlaveDB.masterSlaveTable (name, hobbies) VALUES (?,?)", name, hobbies)
+func (db *DB) InsertData(name string, age int) {
+	_, err := db.Exec("INSERT INTO masterSlaveDB.masterSlaveTable (name, age) VALUES (?,?)", name, age)
 	if err != nil {
 		log.Println(err)
 	}
 }
 
-func (db *DB) QueryDataByHobbies() (int, error) {
-	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE hobbies")
+func (db *DB) QueryRowDataByHobbies(hobbies int) (int, error) {
+	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE age = ?", hobbies)
 	var (
 		// id    uint64
 		name  string
@@ -70,8 +70,29 @@ func (db *DB) QueryDataByHobbies() (int, error) {
 	return 1, nil
 }
 
+func (db *DB) QueryByAge() (int, error) {
+	rows, err := db.Query("SELECT * FROM masterSlaveDB.masterSlaveTable")
+	if err != nil {
+		log.Println(err)
+	}
+
+	var (
+		// id   uint64
+		name string
+		age  int
+	)
+
+	for rows.Next() {
+		err = rows.Scan(&name, &age)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return 1, nil
+}
+
 func (db *DB) CreateIndex() {
-	_, err := db.Exec("CREATE UNIQUE INDEX id ON masterSlaveDB.masterSlaveTable (hobbies);")
+	_, err := db.Exec("CREATE UNIQUE INDEX id ON masterSlaveDB.masterSlaveTable (age);")
 	if err != nil {
 		log.Println(err)
 	}

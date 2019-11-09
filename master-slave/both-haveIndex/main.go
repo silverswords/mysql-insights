@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -11,8 +10,8 @@ import (
 
 func main() {
 	hang := make(chan struct{})
-	const name string = "singing"
-	// const hobby string = "99singing"
+	const name string = "Xiaobing"
+	const hobby = 99
 	const count = 100000
 	master := sql.CreateCon("3306")
 	slaveOne := sql.CreateCon("3307")
@@ -29,7 +28,7 @@ func main() {
 
 	start := time.Now()
 	for i := 0; i < count; i++ {
-		master.InsertData(name, strconv.Itoa(i)+"singing")
+		master.InsertData(name, i)
 		log.Println("[current count]", i)
 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
 	}
@@ -38,7 +37,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = master.QueryDataByHobbies()
+			code, err = master.QueryByAge()
 			if err != nil {
 				log.Println(err)
 			}
@@ -50,7 +49,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = slaveOne.QueryDataByHobbies()
+			code, err = slaveOne.QueryByAge()
 			if err != nil {
 				log.Println(err)
 			}
@@ -62,7 +61,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = slaveTwo.QueryDataByHobbies()
+			code, err = slaveTwo.QueryByAge()
 			if err != nil {
 				log.Println(err)
 			}

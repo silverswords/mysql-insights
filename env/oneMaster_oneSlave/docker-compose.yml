@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  mysql_master:
+    image: mysql:5.7
+  
+  mysql_slave:
+    image: mysql:5.7

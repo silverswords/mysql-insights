@@ -56,7 +56,7 @@ func (db *DB) InsertData(name string, age int) {
 	}
 }
 
-func (db *DB) QueryRowDataByHobbies(hobbies int) (int, error) {
+func (db *DB) QueryRowDataByHobbies(hobbies string) (int, error) {
 	result := db.QueryRow("SELECT * FROM masterSlaveDB.masterSlaveTable WHERE age = ?", hobbies)
 	var (
 		// id    uint64

@@ -2,12 +2,11 @@ package main
 
 import (
 	"log"
-	"strconv"
 	"sync"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	sql "github.com/silverswords/mysql-insights/mysql"
+	sql "github.com/silverswords/mysql-insights/test/mysql"
 )
 
 func main() {
@@ -30,7 +29,7 @@ func main() {
 
 	start := time.Now()
 	for i := 0; i < count; i++ {
-		master.InsertData(name, strconv.Itoa(i)+"singing")
+		master.InsertData(name, 1)
 		log.Println("[current count]", i)
 		log.Println("[current insert time]", time.Now().Sub(start).Seconds())
 	}
@@ -39,7 +38,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = master.QueryDataByHobbies(hobby)
+			code, err = master.QueryRowDataByHobbies(hobby)
 			if err != nil {
 				log.Println(err)
 			}
@@ -66,7 +65,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = slaveOne.QueryDataByHobbies(hobby)
+			code, err = slaveOne.QueryRowDataByHobbies(hobby)
 			if err != nil {
 				log.Println(err)
 			}
@@ -78,7 +77,7 @@ func main() {
 		var code int
 		var err error
 		for code != 1 {
-			code, err = slaveTwo.QueryDataByHobbies(hobby)
+			code, err = slaveTwo.QueryRowDataByHobbies(hobby)
 			if err != nil {
 				log.Println(err)
 			}

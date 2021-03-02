@@ -3,6 +3,22 @@ version: "3"
 services:
   mysql_master:
     image: mysql:5.7
-  
+    env_file:
+      - ./master/mysql_master.env
+    container_name: "mysql_master"
+    ports:
+    - 3308:3306
+    volumes:
+      - ./master/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./master/conf/data/:/var/lib/mysql/
+
   mysql_slave:
     image: mysql:5.7
+    env_file:
+      - ./slave/mysql_slave.env
+    container_name: "mysql_slave"
+    ports:
+      - 3309:3306
+    volumes:
+      - ./slave/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./slave/conf/data/:/var/lib/mysql/

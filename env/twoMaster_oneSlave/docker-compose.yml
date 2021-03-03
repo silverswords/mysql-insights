@@ -1,47 +1,38 @@
 version: '3'
-services: 
+services:
   mysql_master_one:
     image: mysql:5.7
-    networks: 
-      - overlay
     container_name: "mysql_master_one"
     volumes:
       - ./master_one/conf/my.cnf:/etc/mysql/my.cnf
       - ./master_one/data:/var/lib/mysql
     restart: always
-    ports: 
-      - 3306:3306
-    env_file: 
+    ports:
+      - 4000:3306
+    env_file:
       - ./master_one/mysql_master.env
 
-  mysql_slave_two:
+  mysql_master_two:
     image: mysql:5.7
-    networks: 
-      - overlay
     container_name: "mysql_master_two"
     volumes:
       - ./master_two/conf/my.cnf:/etc/mysql/my.cnf
       - ./master_two/data:/var/lib/mysql
     restart: always
     ports:
-      - 3307:3306
+      - 4001:3306
     env_file:
       - ./master_two/mysql_master.env
-    
+
   mysql_slave_two:
     image: mysql:5.7
-    networks: 
-      - overlay
     container_name: "mysql_slave_one"
-    volumes: 
+    volumes:
       - ./slave_one/conf/my.cnf:/etc/mysql/my.cnf
       - ./slave_one/data:/var/lib/mysql
     restart: always
-    ports: 
-      - 3308:3306
+    ports:
+      - 4002:3306
     env_file:
       - ./slave_one/mysql_slave.env
-    
-networks:
-  overlay:
 

@@ -18,7 +18,7 @@ services:
     image: mysql:5.7
     networks: 
       - overlay
-    container_name: "mysql_slave_two"
+    container_name: "mysql_master_two"
     volumes:
       - ./master_two/conf/my.cnf:/etc/mysql/my.cnf
       - ./master_two/data:/var/lib/mysql
@@ -26,13 +26,13 @@ services:
     ports:
       - 3307:3306
     env_file:
-      - ./master_two/mysql_slave.env
+      - ./master_two/mysql_master.env
     
   mysql_slave_two:
     image: mysql:5.7
     networks: 
       - overlay
-    container_name: mysql_slave_one
+    container_name: "mysql_slave_one"
     volumes: 
       - ./slave_one/conf/my.cnf:/etc/mysql/my.cnf
       - ./slave_one/data:/var/lib/mysql

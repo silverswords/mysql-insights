@@ -14,9 +14,9 @@ services:
 
   mysql_slave:
     image: mysql:5.7
+    container_name: "mysql_slave"
     env_file:
       - ./slave/mysql_slave.env
-    container_name: "mysql_slave"
     ports:
       - 3309:3306
     volumes:

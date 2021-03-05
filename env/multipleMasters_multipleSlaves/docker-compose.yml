@@ -11,6 +11,7 @@ services:
     volumes:
       - ./master/conf/my_1.cnf:/etc/mysql/conf.d/my.cnf
       - ./master/conf/data/master_1:/var/lib/mysql/
+    restart: always
 
   mysql_master_2:
     image: mysql:5.7
@@ -22,6 +23,7 @@ services:
     volumes:
       - ./master/conf/my_2.cnf:/etc/mysql/conf.d/my.cnf
       - ./master/conf/data/master_2:/var/lib/mysql/
+    restart: always
 
   mysql_slave_1:
     image: mysql:5.7
@@ -33,6 +35,7 @@ services:
     volumes:
       - ./slave/conf/my_1.cnf:/etc/mysql/conf.d/my.cnf
       - ./slave/conf/data/slave_1:/var/lib/mysql/
+    restart: always
 
   mysql_slave_2:
     image: mysql:5.7
@@ -44,3 +47,4 @@ services:
     volumes:
       - ./slave/conf/my_2.cnf:/etc/mysql/conf.d/my.cnf
       - ./slave/conf/data/slave_2:/var/lib/mysql/
+    restart: always

@@ -11,7 +11,7 @@ In-depth study of mysql, mainly including master-slave, innodb, isolation level,
 
     下载 env 文件，选择自己想要配置的主从形式，在 docker-compose.yml 文件存在的目录下运行 docker-compose up -d 一键启动 mysql 集群
 
-## [benchmark](https://github.com/silverswords/mysql-insights/blob/master/benchmark)
+### [benchmark](https://github.com/silverswords/mysql-insights/blob/master/benchmark)
 
 #### 使用工具
 [sysbench](https://github.com/akopytov/sysbench)

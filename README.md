@@ -20,13 +20,19 @@ In-depth study of mysql, mainly including master-slave, innodb, isolation level,
 #### 工具使用
  - 数据准备
     
-    sysbench ./oltp_read_write.lua --mysql-host=192.168.0.252 --mysql-port=3306  --mysql-user=root --mysql-password=123456  --mysql-db=sakura  --tables=1 --table-  size=100000 --threads=10 --events=100000 prepare
+```bash
+sysbench ./oltp_read_write.lua --mysql-host=192.168.0.252 --mysql-port=3306  --mysql-user=root --mysql-password=123456  --mysql-db=sakura  --tables=1 --table-  size=100000 --threads=10 --events=100000 prepare
+```
  - 开始测试
 
-    sysbench ./oltp_read_write.lua --mysql-host=192.168.0.252 --mysql-port=3006  --mysql-user=root --mysql-password=123456  --mysql-db=sakura  --tables=1 --table-size=100000 --threads=10 --events=100000 run
+```bash
+sysbench ./oltp_read_write.lua --mysql-host=192.168.0.252 --mysql-port=3006  --mysql-user=root --mysql-password=123456  --mysql-db=sakura  --tables=1 --table-size=100000 --threads=10 --events=100000 run
+```
  - 清除数据
 
-    sysbench ./oltp_read_write.lua --mysql-host=192.168.0.252 --mysql-port=3306  --mysql-user=root --mysql-password=123456  --mysql-db=sakura  --tables=1 --table-size=100000 --threads=10 --events=100000 cleanup
+```bash
+sysbench ./oltp_read_write.lua --mysql-host=192.168.0.252 --mysql-port=3306  --mysql-user=root --mysql-password=123456  --mysql-db=sakura  --tables=1 --table-size=100000 --threads=10 --events=100000 cleanup
+```
 #### 参数详解
 tables: 测试表格数量
 table-size: 每个表格插入数据行数

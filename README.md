@@ -9,7 +9,7 @@ In-depth study of mysql, mainly including master-slave, innodb, isolation level,
 
 ### [master-slave](https://github.com/silverswords/mysql-insights/tree/master/env)
 
-    下载 env 文件，选择自己想要配置的主从形式，在 docker-compose.yml 文件存在的目录下运行 docker-compose up -d 一键启动 mysql 集群
+    下载 env 文件，选择自己想要配置的主从形式，在 docker-compose.yml 文件存在的目录下运行 docker-compose up -d 一键启动 mysql 集群；支持使用主从形式目录下的 build.sh 二进制文件一键配置主从库
 
 ### [benchmark](https://github.com/silverswords/mysql-insights/blob/master/benchmark)
 
